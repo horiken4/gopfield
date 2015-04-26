@@ -82,7 +82,7 @@ func (n *Neuron) Run(iter int, finish chan bool) {
 }
 
 func (n *Neuron) run(iter int, finish chan bool) {
-	fmt.Println("start")
+	fmt.Printf("neuron %v : start\n", n.id)
 
 	if n.trainMode {
 		// Initialize weights to 0
@@ -106,12 +106,15 @@ func (n *Neuron) run(iter int, finish chan bool) {
 
 		// Initialize electrical potential
 		n.v = <-n.vChan
-		for _, axon := range n.outAxons {
-			axon <- n.v
-		}
 
 		for it := 0; it < iter; it++ {
-			fmt.Println(n.id, "it=", iter)
+			fmt.Println(n.id, "neuron %v : it =", n.id, it)
+
+			for neuron, axon := range n.outAxons {
+				fmt.Printf("neuron %v : output to %v before\n", n.id, neuron.id)
+				axon <- n.v
+				fmt.Printf("neuron %v : output to %v after\n", n.id, neuron.id)
+			}
 
 			var s float32
 			for neuron, axon := range n.inAxons {
@@ -127,16 +130,10 @@ func (n *Neuron) run(iter int, finish chan bool) {
 				v = 1
 			}
 			n.v = v
-
-			for neuron, axon := range n.outAxons {
-				fmt.Printf("neuron %v : output to %v before\n", n.id, neuron.id)
-				axon <- v
-				fmt.Printf("neuron %v : output to %v after\n", n.id, neuron.id)
-			}
 		}
 	}
 
-	fmt.Println("finish")
+	fmt.Printf("neuron %v : finish\n", n.id)
 
 	finish <- true
 }
@@ -206,10 +203,9 @@ func (h *Hopfield) Run(iter int) {
 
 func (h *Hopfield) Print(cols int) {
 	for i, neuron := range h.Neurons {
-		if i%cols == 0 {
+		if i != 0 && i%cols == 0 {
 			fmt.Print("\n")
 		}
-
 		if neuron.v == -1 {
 			fmt.Print("○")
 		} else {
@@ -249,7 +245,6 @@ func (h *Hopfield) FeedRandomly() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(pat)
 
 	return nil
 }

@@ -36,21 +36,40 @@ func main() {
 	h.Train(pats)
 
 	// Remember
-	pat := []float32{
-		1, 1, 1, 1, 1,
-		1, -1, 1, -1, 1,
-		1, -1, -1, 1, 1,
-		1, 1, 1, 1, 1,
-		1, -1, 1, -1, 1,
+	initPats := [][]float32{
+		[]float32{
+			1, 1, 1, 1, 1,
+			1, -1, 1, -1, 1,
+			1, 1, -1, 1, 1,
+			1, -1, 1, 1, 1,
+			1, 1, 1, -1, 1,
+		},
+		[]float32{
+			-1, 1, 1, 1, 1,
+			1, 1, 1, -1, 1,
+			1, -1, 1, 1, 1,
+			1, 1, 1, -1, -1,
+			1, -1, 1, -1, 1,
+		},
+		[]float32{
+			-1, 1, -1, 1, 1,
+			1, -1, 1, -1, 1,
+			1, -1, 1, 1, -1,
+			1, -1, 1, -1, -1,
+			1, -1, 1, -1, 1,
+		},
 	}
-	h.Feed(pat)
-	h.Run(50)
-	fmt.Println("energy =", h.Energy())
-	h.Print(5)
+	for _, pat := range initPats {
+		h.Feed(pat)
+		h.Run(50)
+		h.Print(5)
+		fmt.Println("energy =", h.Energy())
+	}
 
 	/*
 		// Solve 0-1 Knapsack probrem
 
+		// A solution is 1 -1 1 1 -1 -1
 		C := 14                          // Total capacity
 		v := []int{10, 13, 10, 16, 2, 3} // Item value
 		c := []int{3, 5, 4, 7, 2, 4}     // Item capacity
@@ -72,7 +91,7 @@ func main() {
 
 		h.FeedRandomly()
 		h.Run(100)
+		h.Print(6)
 		fmt.Println("energy =", h.Energy())
-		h.Print(6) // A solution 1 -1 1 1 -1 -1
 	*/
 }
