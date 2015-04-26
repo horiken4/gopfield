@@ -108,7 +108,7 @@ func (n *Neuron) run(iter int, finish chan bool) {
 		n.v = <-n.vChan
 
 		for it := 0; it < iter; it++ {
-			fmt.Println(n.id, "neuron %v : it =", n.id, it)
+			fmt.Printf("neuron %v : it = %v\n", n.id, it)
 
 			for neuron, axon := range n.outAxons {
 				fmt.Printf("neuron %v : output to %v before\n", n.id, neuron.id)
